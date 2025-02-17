@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Maker Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .add-row-btn {
+            margin-top: 10px;
+            cursor: pointer;
+            color: #007bff;
+        }
+        .education-row {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        .education-row input, .education-row select {
+            width: 30%;
+        }
+        @media (max-width: 600px) {
+            .education-row {
+                flex-direction: column;
+            }
+            .education-row input, .education-row select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>CV Maker Form</h2>
+    <form id="cvForm">
+        <!-- Personal Information -->
+        <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" name="phone" required>
+        </div>
+        <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" id="address" name="address" required>
+        </div>
+        <div class="form-group">
+            <label for="dob">Date of Birth</label>
+            <input type="date" id="dob" name="dob" required>
+        </div>
+
+        <!-- Education -->
+        <div class="form-group">
+            <label for="education">Education</label>
+            <div id="educationContainer">
+                <div class="education-row">
+                    <input type="text" name="qualification[]" placeholder="Qualification" required>
+                    <input type="text" name="institution[]" placeholder="Institution Name" required>
+                    <input type="number" name="gradYear[]" placeholder="Graduation Year" required>
+                </div>
+            </div>
+            <div class="add-row-btn" onclick="addEducationRow()">+ Add Another Education</div>
+        </div>
+
+        <!-- Skills -->
+        <div class="form-group">
+            <label for="skills">Skills</label>
+            <select id="skills" name="skills[]" multiple="multiple" required></select>
+        </div>
+
+        <!-- Work Experience -->
+        <div class="form-group">
+            <label for="workTitle">Job Title</label>
+            <input type="text" id="workTitle" name="workTitle">
+        </div>
+        <div class="form-group">
+            <label for="company">Company</label>
+            <input type="text" id="company" name="company">
+        </div>
+        <div class="form-group">
+            <label for="duration">Duration</label>
+            <input type="text" id="duration" name="duration">
+        </div>
+
+        <!-- Languages -->
+        <div class="form-group">
+            <label for="languages">Languages</label>
+            <select id="languages" name="languages[]" multiple="multiple" required></select>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit">Submit</button>
+    </form>
+</div>
+
+<!-- JQuery and Select2 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
+<script>
+    // Initializing Select2 for multi-select dropdowns
+    $(document).ready(function() {
+        $('#skills').select2({
+            placeholder: "Select Skills",
+            allowClear: true
+        });
+        $('#languages').select2({
+            placeholder: "Select Languages",
+            allowClear: true
+        });
+
+        // Load dynamic data for Division-District dropdowns (AJAX simulation)
+        // Assuming you have an API or predefined list for division-district
+        $('#division').change(function() {
+            var division = $(this).val();
+            if (division) {
+                $.ajax({
+                    url: '/getDistricts.php',  // Replace with actual API endpoint
+                    type: 'GET',
+                    data: { division: division },
+                    success: function(data) {
+                        $('#district').html(data);
+                    }
+                });
+            }
+        });
+    });
+
+    // Add Education Row dynamically
+    function addEducationRow() {
+        const educationRow = `
+            <div class="education-row">
+                <input type="text" name="qualification[]" placeholder="Qualification" required>
+                <input type="text" name="institution[]" placeholder="Institution Name" required>
+                <input type="number" name="gradYear[]" placeholder="Graduation Year" required>
+            </div>
+        `;
+        $('#educationContainer').append(educationRow);
+    }
+
+    // Form Validation
+    $('#cvForm').submit(function(e) {
+        e.preventDefault();
+        var isValid = true;
+
+        // Check required fields
+        $('#cvForm input, #cvForm select').each(function() {
+            if ($(this).val() === "" && $(this).attr('required')) {
+                alert("Please fill all required fields.");
+                isValid = false;
+                return false;
+            }
+        });
+
+        if (isValid) {
+            alert("Form submitted successfully!");
+            // Here, you would typically submit the form data to the server
+        }
+    });
+</script>
+
+</body>
+</html>
