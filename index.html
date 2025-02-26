@@ -7,6 +7,11 @@
     <title>Krittika Roy</title>
     <!-- CSS start -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .text-justify {
+            text-align: justify;
+        }
+    </style>
     <!-- font awsome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 </head>
@@ -14,10 +19,10 @@
 <body>
     <!-- header section start -->
     <header id="header" class="mb-4">
-        <section class="container">
+        <section class="container text-justify" id="resume-content">
             <div class="row gy-2">
                 <div class="col-lg-4 col-sm-12 order-sm-1 p-3">
-                    <div class="card pt-5">
+                    <div class="k1 pt-5">
                         <img src="Krittika.jpeg" class="card-img-top img-thumbnail mx-auto d-block" alt="Failed to connect" style="width: 50%;">
                         <div class="card-body">
                             <h1>Krittika Roy</h1>
@@ -29,7 +34,7 @@
                                     class=" text-dark text-decoration-none ms-2"><i class="fa fa-envelope"></i></a>
                                 <a href="https://github.com/krittikaroy0"
                                     class=" text-dark text-decoration-none ms-2"><i class="fa-brands fa-github"></i></a>
-                                <a href="www.linkedin.com/in/krittika-roy-516629281/"
+                                <a href="https://www.linkedin.com/in/krittika-roy-516629281/"
                                     class=" text-dark text-decoration-none ms-2"><i
                                         class="fa-brands fa-linkedin"></i></a>
                                 <a href="https://krittikaroy0.github.io/portfolio/"
@@ -82,9 +87,9 @@
                     </div>
                 </div>
                 <div class="col-lg-8 col-sm-12 order-sm-2 p-3">
-                    <div class="card">
+                    <div class="k2">
                         <h4 class="m-2"><u>CAREER OBJECTIVE: </u></h4>
-                        <p class="m-2 justify-content"> 
+                        <p class="m-2 text-justify"> 
                             Hello, Myself Krittika Roy, I am currently looking for a Full-time job in an environment that 
                             offers a greater challenge, where I can utilize my skills and gain further experience and the 
                             opportunity to help the organization move forward efficiently and productively. A passionate 
@@ -191,9 +196,38 @@
             </div>
         </section>
     </header>
+   
+ 
     <!-- header section end -->
     <!-- Js start -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script>
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+
+            const resumeContent = document.querySelector("#header");
+
+            html2canvas(resumeContent, {
+                scale: 2,   // Higher scale for better quality
+                useCORS: true,
+                allowTaint: true
+            }).then(canvas => {
+                const imgData = canvas.toDataURL("image/png");
+                const imgWidth = 210; // A4 width in mm
+                const pageHeight = 297; // A4 height in mm
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                doc.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+                doc.save("Krittika_Roy_Resume.pdf");
+            }).catch(error => {
+                console.error("Error generating PDF:", error);
+            });
+        }
+    </script>
 </body>
 
 </html>
